@@ -1,7 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 
-
 #define _NOT_		0
 #define _AND_		1
 #define _OR_		2
@@ -9,6 +8,11 @@
 #define _NOR_		4
 #define _XOR_		5
 #define _XNOR_		6
+#define _On_		7
+#define _Off_		8
+#define _Clock_		9
+#define _Button_	10
+#define _Switch_	11
 
 class Gate
 {
@@ -20,6 +24,7 @@ public:
 		Node* connection = nullptr;
 		sf::Vector2i position;
 		sf::FloatRect rectangle;
+		bool on = false;
 
 		bool Clicked(sf::Vector2f mouse) 
 		{ 
@@ -45,9 +50,11 @@ public:
 
 	bool Clicked(sf::Vector2f mouse);
 
-	//bool AABB(sf::Fl);
+	virtual void Update() {}
 
 	Node m_nodes[3];
+
+	bool output = false;
 
 	sf::FloatRect rectangle;
 
@@ -81,6 +88,14 @@ public:
 	~NOT()
 	{
 	}
+
+	void Update() override
+	{
+		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+
+		output = false;
+	}
 };
 
 class AND : public Gate
@@ -99,6 +114,14 @@ public:
 
 	~AND()
 	{
+	}
+
+	void Update() override
+	{
+		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+
+		output = a && b;
 	}
 };
 
@@ -119,6 +142,14 @@ public:
 	~OR()
 	{
 	}
+
+	void Update() override
+	{
+		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+
+		output = a || b;
+	}
 };
 
 class NAND : public Gate
@@ -138,6 +169,14 @@ public:
 	~NAND()
 	{
 	}
+
+	void Update() override
+	{
+		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+
+		output = !(a && b);
+	}
 };
 
 class NOR : public Gate
@@ -155,6 +194,14 @@ public:
 
 	~NOR()
 	{
+	}
+
+	void Update() override
+	{
+		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+
+		output = !(a || b);
 	}
 };
 
@@ -175,6 +222,14 @@ public:
 	~XOR()
 	{
 	}
+
+	void Update() override
+	{
+		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+
+		output = (a && !b) || (b && !a);
+	}
 };
 
 class XNOR : public Gate
@@ -194,6 +249,190 @@ public:
 	~XNOR()
 	{
 	}
+
+	void Update() override
+	{
+		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+
+		output = !((a && !b) || (b && !a));
+	}
 };
+
+class On : public Gate
+{
+public:
+	On(const Gate& gate) :
+		Gate(gate)
+	{
+
+	}
+
+	On(const sf::Vector2i& gridPosition) :
+		Gate(gridPosition)
+	{
+		m_type = _On_;
+
+		rectangle = { 0, 0, 19, 11 };
+
+		m_nodes[0].position = sf::Vector2i(0, 0);
+		m_nodes[1].position = sf::Vector2i(0, 0);
+		m_nodes[2].position = sf::Vector2i(17, 5);
+
+		m_nodes[0].rectangle = { 0, 0, 0, 0 };
+		m_nodes[1].rectangle = { 0, 0, 0, 0 };
+		m_nodes[2].rectangle = { 17, 3, 5, 5 };
+	}
+
+	~On()
+	{
+	}
+
+	void Update() override
+	{
+		output = true;
+	}
+};
+
+class Off : public Gate
+{
+public:
+	Off(const Gate& gate) :
+		Gate(gate)
+	{
+
+	}
+
+	Off(const sf::Vector2i& gridPosition) :
+		Gate(gridPosition)
+	{
+		m_type = _Off_;
+
+		rectangle = { 0, 0, 19, 11 };
+
+		m_nodes[0].position = sf::Vector2i(0, 0);
+		m_nodes[1].position = sf::Vector2i(0, 0);
+		m_nodes[2].position = sf::Vector2i(17, 5);
+
+		m_nodes[0].rectangle = { 0, 0, 0, 0 };
+		m_nodes[1].rectangle = { 0, 0, 0, 0 };
+		m_nodes[2].rectangle = { 17, 3, 5, 5 };
+	}
+
+	~Off()
+	{
+	}
+
+	void Update() override
+	{
+		output = false;
+	}
+};
+
+class Clock : public Gate
+{
+public:
+	Clock(const Gate& gate) :
+		Gate(gate)
+	{
+
+	}
+
+	Clock(const sf::Vector2i& gridPosition) :
+		Gate(gridPosition)
+	{
+		m_type = _Clock_;
+
+		rectangle = { 0, 0, 19, 11 };
+
+		m_nodes[0].position = sf::Vector2i(0, 0);
+		m_nodes[1].position = sf::Vector2i(0, 0);
+		m_nodes[2].position = sf::Vector2i(17, 5);
+
+		m_nodes[0].rectangle = { 0, 0, 0, 0 };
+		m_nodes[1].rectangle = { 0, 0, 0, 0 };
+		m_nodes[2].rectangle = { 17, 3, 5, 5 };
+	}
+
+	~Clock()
+	{
+	}
+
+	void Update() override
+	{
+		output = false;
+	}
+};
+
+class Button : public Gate
+{
+public:
+	Button(const Gate& gate) :
+		Gate(gate)
+	{
+
+	}
+
+	Button(const sf::Vector2i& gridPosition) :
+		Gate(gridPosition)
+	{
+		m_type = _Button_;
+
+		rectangle = { 0, 0, 19, 11 };
+
+		m_nodes[0].position = sf::Vector2i(0, 0);
+		m_nodes[1].position = sf::Vector2i(0, 0);
+		m_nodes[2].position = sf::Vector2i(17, 5);
+
+		m_nodes[0].rectangle = { 0, 0, 0, 0 };
+		m_nodes[1].rectangle = { 0, 0, 0, 0 };
+		m_nodes[2].rectangle = { 17, 3, 5, 5 };
+	}
+
+	~Button()
+	{
+	}
+
+	void Update() override
+	{
+		output = false;
+	}
+};
+
+class Switch : public Gate
+{
+public:
+	Switch(const Gate& gate) :
+		Gate(gate)
+	{
+
+	}
+
+	Switch(const sf::Vector2i& gridPosition) :
+		Gate(gridPosition)
+	{
+		m_type = _Switch_;
+
+		rectangle = { 0, 0, 19, 11 };
+
+		m_nodes[0].position = sf::Vector2i(0, 0);
+		m_nodes[1].position = sf::Vector2i(0, 0);
+		m_nodes[2].position = sf::Vector2i(17, 5);
+
+		m_nodes[0].rectangle = { 0, 0, 0, 0 };
+		m_nodes[1].rectangle = { 0, 0, 0, 0 };
+		m_nodes[2].rectangle = { 17, 3, 5, 5 };
+	}
+
+	~Switch()
+	{
+	}
+
+	void Update() override
+	{
+		output = false;
+	}
+};
+
 
 

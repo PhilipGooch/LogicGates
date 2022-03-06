@@ -17,6 +17,11 @@ Application::Application()
 	textureNOR.loadFromFile("Images/NOR.png");
 	textureXOR.loadFromFile("Images/XOR.png");
 	textureXNOR.loadFromFile("Images/XNOR.png");
+	textureOn.loadFromFile("Images/On.png");
+	textureOff.loadFromFile("Images/Off.png");
+	textureClock.loadFromFile("Images/Clock.png");
+	textureButton.loadFromFile("Images/Button.png");
+	textureSwitch.loadFromFile("Images/Switch.png");
 
 	spriteNOT.setTexture(textureNOT);
 	spriteAND.setTexture(textureAND);
@@ -25,6 +30,11 @@ Application::Application()
 	spriteNOR.setTexture(textureNOR);
 	spriteXOR.setTexture(textureXOR);
 	spriteXNOR.setTexture(textureXNOR);
+	spriteOn.setTexture(textureOn);
+	spriteOff.setTexture(textureOff);
+	spriteClock.setTexture(textureClock);
+	spriteButton.setTexture(textureButton);
+	spriteSwitch.setTexture(textureSwitch);
 
 	sprites[_NOT_] = &spriteNOT;
 	sprites[_AND_] = &spriteAND;
@@ -33,8 +43,13 @@ Application::Application()
 	sprites[_NOR_] = &spriteNOR;
 	sprites[_XOR_] = &spriteXOR;
 	sprites[_XNOR_] = &spriteXNOR;
+	sprites[_On_] = &spriteOn;
+	sprites[_Off_] = &spriteOff;
+	sprites[_Clock_] = &spriteClock;
+	sprites[_Button_] = &spriteButton;
+	sprites[_Switch_] = &spriteSwitch;
 
-	highlight.setSize(sf::Vector2f(25, 9));
+	
 }
 
 Application::~Application()
@@ -90,18 +105,6 @@ void Application::Run()
 	window->close();
 }
 
-void zoomViewAt(sf::Vector2i pixel, sf::RenderWindow* window, float zoom)
-{
-	const sf::Vector2f beforeCoord{ window->mapPixelToCoords(pixel) };
-	sf::View view{ window->getView() };
-	view.zoom(zoom);
-	window->setView(view);
-	const sf::Vector2f afterCoord{ window->mapPixelToCoords(pixel) };
-	const sf::Vector2f offsetCoords{ beforeCoord - afterCoord };
-	view.move(offsetCoords);
-	window->setView(view);
-}
-
 void Application::HandleInput()
 {
 	mouseWorldPosition = window->mapPixelToCoords((input.getMousePosition() / zoom) * zoom);
@@ -147,7 +150,12 @@ void Application::HandleInput()
 		input.getKeyPressed(sf::Keyboard::Num4) || 
 		input.getKeyPressed(sf::Keyboard::Num5) || 
 		input.getKeyPressed(sf::Keyboard::Num6) || 
-		input.getKeyPressed(sf::Keyboard::Num7))
+		input.getKeyPressed(sf::Keyboard::Num7) ||
+		input.getKeyPressed(sf::Keyboard::Num8) ||
+		input.getKeyPressed(sf::Keyboard::Num9) ||
+		input.getKeyPressed(sf::Keyboard::Num0) ||
+		input.getKeyPressed(sf::Keyboard::Dash) ||
+		input.getKeyPressed(sf::Keyboard::Equal))
 	{
 		if (selectedGate)
 		{
@@ -158,13 +166,18 @@ void Application::HandleInput()
 		}
 	}
 	
-	if (input.getKeyPressed(sf::Keyboard::Num1)) selectedGate = new NOT(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num2)) selectedGate = new AND(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num3)) selectedGate = new OR(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num4)) selectedGate = new NAND(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num5)) selectedGate = new NOR(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num6)) selectedGate = new XOR(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num7)) selectedGate = new XNOR(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num1)) selectedGate = new On(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num2)) selectedGate = new Off(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num3)) selectedGate = new AND(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num4)) selectedGate = new OR(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num5)) selectedGate = new NAND(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num6)) selectedGate = new NOR(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num7)) selectedGate = new XOR(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num8)) selectedGate = new XNOR(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num9)) selectedGate = new NOT(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num0)) selectedGate = new Clock(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Dash)) selectedGate = new Button(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Equal)) selectedGate = new Switch(input.getMousePosition() / zoom);
 
 
 	if (input.getMouseLeftDown())
@@ -242,9 +255,12 @@ void Application::HandleInput()
 				}
 			}
 		}
-		else
+		else 
 		{
-
+			if (!connecting)
+			{
+				selecting = true;
+			}
 		}
 		if (connecting)
 		{
@@ -286,25 +302,43 @@ void Application::HandleInput()
 	{
 		if (connection)
 		{
-			if (gateANode == 2 && (gateBNode == 0 || gateBNode == 1))
+			//if (!gateA->m_nodes[gateANode].connection && !gateB->m_nodes[gateBNode].connection)
 			{
-				gateA->ConnectOutputToInput(gateB, gateBNode);
+				if (gateANode == 2 && (gateBNode == 0 || gateBNode == 1))
+				{
+					gateA->ConnectOutputToInput(gateB, gateBNode);
+				}
+				if ((gateANode == 0 || gateANode == 1) && gateBNode == 2)
+				{
+					gateA->ConnectInputAToOutput(gateB, gateANode);
+				}
 			}
-			if ((gateANode == 0 || gateANode == 1) && gateBNode == 2)
+		}
+
+		if (selecting)
+		{
+			for (Gate* gate : gates)
 			{
-				gateA->ConnectInputAToOutput(gateB, gateANode);
+				if (gate->GetWorldPosition().x < mouseWorldPosition.x &&
+					gate->GetWorldPosition().x + gate->rectangle.width > mouseWorldSave.x &&
+					gate->GetWorldPosition().y < mouseWorldPosition.y &&
+					gate->GetWorldPosition().y + gate->rectangle.height > mouseWorldSave.y)
+				{
+					// multi selection...
+				}
 			}
 		}
 
 		dragging = false;
 		connecting = false;
 		connection = false;
+		selecting = false;
 
 		if (selectedGate)
 		{
 			if (!valid)
 			{
-				selectedGate->SetWorldPosition(sf::Vector2i(gateWorldSave));
+				selectedGate->SetWorldPosition(sf::Vector2i(gateWorldSave) + sf::Vector2i(selectedGate->rectangle.width / 2, selectedGate->rectangle.height / 2));
 			}
 		}
 	}
@@ -357,6 +391,11 @@ void Application::HandleInput()
 
 void Application::Update(float deltaTime)
 {
+	for (Gate* gate : gates)
+	{
+		gate->Update();
+	}
+
 	if (selectedGate)
 	{
 		if (!selectedGate->GetInstantiated())
@@ -403,6 +442,15 @@ void Application::Render()
 {
 	window->clear(sf::Color(200, 200, 200));
 
+	if (selecting)
+	{
+		sf::RectangleShape rectangle;
+		rectangle.setPosition(mouseWorldSave);
+		rectangle.setSize(mouseWorldPosition - mouseWorldSave);
+		rectangle.setFillColor(sf::Color(0, 0, 255, 150));
+		window->draw(rectangle);
+	}
+
 	for (Gate* gate : gates)
 	{
 		sf::Sprite* sprite = sprites[gate->GetType()];
@@ -410,8 +458,9 @@ void Application::Render()
 		window->draw(*sprite);
 	}
 
-	if (selectedGate)
+	if(selectedGate)
 	{
+		highlight.setSize(sf::Vector2f(selectedGate->rectangle.width, selectedGate->rectangle.height));
 		window->draw(highlight);
 		sf::Sprite* sprite = sprites[selectedGate->GetType()];
 		sprite->setPosition(selectedGate->GetWorldPosition().x, selectedGate->GetWorldPosition().y);
@@ -423,20 +472,19 @@ void Application::Render()
 		sf::RectangleShape square;
 		square.setSize(sf::Vector2f(1, 1));
 		square.setPosition(wireAWorldSave);
-		square.setFillColor(sf::Color::Red);
+		square.setFillColor(gateANode == 2 ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black);
 		window->draw(square);
-		
 
 		sf::Vertex line[] =
 		{
-			sf::Vertex(wireAWorldSave + sf::Vector2f(0.5f, 0.5f), sf::Color::Red),
-			sf::Vertex(mouseWorldPosition + sf::Vector2f(0.5f, 0.5f), sf::Color::Red)
+			sf::Vertex(wireAWorldSave + sf::Vector2f(0.5f, 0.5f), gateANode == 2 ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black),
+			sf::Vertex(mouseWorldPosition + sf::Vector2f(0.5f, 0.5f), gateANode == 2 ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black)
 			
 		};
 
 		if (connection)
 		{
-			line[1] = sf::Vertex(wireBWorldSave + sf::Vector2f(0.5f, 0.5f), sf::Color::Red);
+			line[1] = sf::Vertex(wireBWorldSave + sf::Vector2f(0.5f, 0.5f), gateANode == 2 ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black);
 			square.setPosition(wireBWorldSave);
 			window->draw(square);
 		}
@@ -454,7 +502,7 @@ void Application::Render()
 
 				sf::RectangleShape square;
 				square.setSize(sf::Vector2f(1, 1));
-				square.setFillColor(sf::Color::Red);
+				square.setFillColor(gate->output ? sf::Color::Red : sf::Color::Black);
 				square.setPosition(connectorPosition);
 				window->draw(square);
 				square.setPosition(otherConnectorPosition);
@@ -463,8 +511,8 @@ void Application::Render()
 
 				sf::Vertex line[] =
 				{
-					sf::Vertex(connectorPosition + sf::Vector2f(0.5f, 0.5f), sf::Color::Red),
-					sf::Vertex(otherConnectorPosition + sf::Vector2f(0.5f, 0.5f), sf::Color::Red)
+					sf::Vertex(connectorPosition + sf::Vector2f(0.5f, 0.5f), gate->output ? sf::Color::Red : sf::Color::Black),
+					sf::Vertex(otherConnectorPosition + sf::Vector2f(0.5f, 0.5f), gate->output ? sf::Color::Red : sf::Color::Black)
 				};
 				
 				window->draw(line, 2, sf::Lines);

@@ -31,6 +31,11 @@ private:
 	sf::Texture textureNOR;
 	sf::Texture textureXOR;
 	sf::Texture textureXNOR;
+	sf::Texture textureOn;
+	sf::Texture textureOff;
+	sf::Texture textureClock;
+	sf::Texture textureButton;
+	sf::Texture textureSwitch;
 
 	sf::Sprite spriteNOT;
 	sf::Sprite spriteAND;
@@ -39,6 +44,11 @@ private:
 	sf::Sprite spriteNOR;
 	sf::Sprite spriteXOR;
 	sf::Sprite spriteXNOR;
+	sf::Sprite spriteOn;
+	sf::Sprite spriteOff;
+	sf::Sprite spriteClock;
+	sf::Sprite spriteButton;
+	sf::Sprite spriteSwitch;
 
 	sf::RectangleShape highlight;
 
@@ -65,6 +75,7 @@ private:
 	bool dragging = false;
 	bool connecting = false;
 	bool connection = false;
+	bool selecting = false;
 
 	int width = 1024;
 	int height = 1024 - 256;
