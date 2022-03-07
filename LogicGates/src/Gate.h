@@ -121,7 +121,7 @@ public:
 		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
 		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
 
-		output = a && b;
+		output = (m_nodes[0].connection && m_nodes[1].connection) && (a && b);
 	}
 };
 
@@ -148,7 +148,7 @@ public:
 		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
 		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
 
-		output = a || b;
+		output = (m_nodes[0].connection && m_nodes[1].connection) && (a || b);
 	}
 };
 
@@ -175,7 +175,7 @@ public:
 		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
 		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
 
-		output = !(a && b);
+		output = (m_nodes[0].connection && m_nodes[1].connection) && (!(a && b));
 	}
 };
 
@@ -201,7 +201,7 @@ public:
 		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
 		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
 
-		output = !(a || b);
+		output = (m_nodes[0].connection && m_nodes[1].connection) && (!(a || b));
 	}
 };
 
@@ -228,7 +228,7 @@ public:
 		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
 		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
 
-		output = (a && !b) || (b && !a);
+		output = (m_nodes[0].connection && m_nodes[1].connection) && ((a && !b) || (b && !a));
 	}
 };
 
@@ -255,7 +255,7 @@ public:
 		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
 		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
 
-		output = !((a && !b) || (b && !a));
+		output = (m_nodes[0].connection && m_nodes[1].connection) && (!((a && !b) || (b && !a)));
 	}
 };
 

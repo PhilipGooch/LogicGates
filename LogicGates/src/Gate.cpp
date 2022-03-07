@@ -57,6 +57,10 @@ void Gate::ConnectOutputToInput(Gate* gate, int input)
 {
 	Node* thisOutput = &m_nodes[2];
 	Node* otherInput = &gate->m_nodes[input];
+	if(thisOutput->connection) 
+		thisOutput->connection->connection = nullptr;
+	if(otherInput->connection)
+		otherInput->connection->connection = nullptr;
 	thisOutput->connection = otherInput;
 	otherInput->connection = thisOutput;
 	thisOutput->parent = this;
@@ -67,6 +71,10 @@ void Gate::ConnectInputAToOutput(Gate* gate, int input)
 {
 	Node* thisInput = &m_nodes[input];
 	Node* otherOutput= &gate->m_nodes[2];
+	if(thisInput->connection)
+		thisInput->connection->connection = nullptr;
+	if(otherOutput->connection)
+		otherOutput->connection->connection = nullptr;
 	thisInput->connection = otherOutput;
 	otherOutput->connection = thisInput;
 	thisInput->parent = this;

@@ -306,7 +306,10 @@ void Application::HandleInput()
 			{
 				if (gateANode == 2 && (gateBNode == 0 || gateBNode == 1))
 				{
-					gateA->ConnectOutputToInput(gateB, gateBNode);
+					//if (!gateB->m_nodes[gateBNode].connection)
+					{
+						gateA->ConnectOutputToInput(gateB, gateBNode);
+					}
 				}
 				if ((gateANode == 0 || gateANode == 1) && gateBNode == 2)
 				{
