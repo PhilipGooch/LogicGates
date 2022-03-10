@@ -21,7 +21,9 @@ public:
 	struct Node
 	{
 		Gate* parent;
-		Node* connection = nullptr;
+		std::vector<Node*> connections;
+
+		//Node* connection = nullptr;
 		sf::Vector2i position;
 		sf::FloatRect rectangle;
 		bool on = false;
@@ -91,8 +93,10 @@ public:
 
 	void Update() override
 	{
-		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+
+
+		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
 
 		output = false;
 	}
@@ -118,10 +122,12 @@ public:
 
 	void Update() override
 	{
-		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
 
-		output = (m_nodes[0].connection && m_nodes[1].connection) && (a && b);
+		//output = (m_nodes[0].connection && m_nodes[1].connection) && (a && b);
+
+		output = false;
 	}
 };
 
@@ -145,10 +151,12 @@ public:
 
 	void Update() override
 	{
-		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//
+		//output = (m_nodes[0].connection && m_nodes[1].connection) && (a || b);
 
-		output = (m_nodes[0].connection && m_nodes[1].connection) && (a || b);
+		output = false;
 	}
 };
 
@@ -172,10 +180,12 @@ public:
 
 	void Update() override
 	{
-		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//
+		//output = (m_nodes[0].connection && m_nodes[1].connection) && (!(a && b));
 
-		output = (m_nodes[0].connection && m_nodes[1].connection) && (!(a && b));
+		output = false;
 	}
 };
 
@@ -198,10 +208,12 @@ public:
 
 	void Update() override
 	{
-		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//
+		//output = (m_nodes[0].connection && m_nodes[1].connection) && (!(a || b));
 
-		output = (m_nodes[0].connection && m_nodes[1].connection) && (!(a || b));
+		output = false;
 	}
 };
 
@@ -225,10 +237,12 @@ public:
 
 	void Update() override
 	{
-		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//
+		//output = (m_nodes[0].connection && m_nodes[1].connection) && ((a && !b) || (b && !a));
 
-		output = (m_nodes[0].connection && m_nodes[1].connection) && ((a && !b) || (b && !a));
+		output = false;
 	}
 };
 
@@ -252,10 +266,12 @@ public:
 
 	void Update() override
 	{
-		bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
+		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
+		//
+		//output = (m_nodes[0].connection && m_nodes[1].connection) && (!((a && !b) || (b && !a)));
 
-		output = (m_nodes[0].connection && m_nodes[1].connection) && (!((a && !b) || (b && !a)));
+		output = false;
 	}
 };
 

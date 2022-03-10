@@ -57,28 +57,91 @@ void Gate::ConnectOutputToInput(Gate* gate, int input)
 {
 	Node* thisOutput = &m_nodes[2];
 	Node* otherInput = &gate->m_nodes[input];
-	if(thisOutput->connection) 
-		thisOutput->connection->connection = nullptr;
-	if(otherInput->connection)
-		otherInput->connection->connection = nullptr;
-	thisOutput->connection = otherInput;
-	otherInput->connection = thisOutput;
-	thisOutput->parent = this;
-	otherInput->parent = gate;
+
+	bool found = false;
+	for (Node* connection : thisOutput->connections)
+	{
+		if (connection == otherInput)
+		{
+			found = true;
+			break;
+		}
+	}
+	// If output does not allready exist
+	if (!found)
+	{
+		// add connection
+		thisOutput->connections.push_back(otherInput);
+		if (otherInput->connections.size() > 0)
+		{
+			Node* previousOutputNode = otherInput->connections[0];
+			for (int i = 0; i < previousOutputNode->connections.size(); i++)
+			{
+				if (previousOutputNode->connections[i] == otherInput)
+				{
+					previousOutputNode->connections.erase(previousOutputNode->connections.begin() + i);
+					break;
+				}
+			}
+		}
+		
+		otherInput->connections.clear();
+		otherInput->connections.push_back(thisOutput);
+		thisOutput->parent = this;
+		otherInput->parent = gate;
+	}
 }
 
 void Gate::ConnectInputAToOutput(Gate* gate, int input)
 {
 	Node* thisInput = &m_nodes[input];
-	Node* otherOutput= &gate->m_nodes[2];
-	if(thisInput->connection)
-		thisInput->connection->connection = nullptr;
-	if(otherOutput->connection)
-		otherOutput->connection->connection = nullptr;
-	thisInput->connection = otherOutput;
-	otherOutput->connection = thisInput;
-	thisInput->parent = this;
-	otherOutput->parent = gate;
+	Node* otherOutput = &gate->m_nodes[2];
+
+	otherOutput->parent->ConnectOutputToInput(thisInput->parent, input);
+
+	//bool found = false;
+	//for (Node* connection : otherOutput->connections)
+	//{
+	//	if (connection == thisInput)
+	//	{
+	//		found = true;
+	//		break;
+	//	}
+	//}
+	//if (!found)
+	//{
+	//	thisInput->connections.clear();
+	//	thisInput->connections.push_back(otherOutput);
+	//
+	//	otherOutput->connections.push_back(thisInput);
+	//	thisInput->parent = this;
+	//	otherOutput->parent = gate;
+	//}
+
+
+
+
+	/*Node* thisInput = &m_nodes[input];
+	Node* otherOutput = &gate->m_nodes[2];
+
+	bool found = false;
+	for (Node* connection : otherOutput->connections)
+	{
+		if (connection == thisInput)
+		{
+			found = true;
+			break;
+		}
+	}
+	if (!found)
+	{
+		thisInput->connections.clear();
+		thisInput->connections.push_back(otherOutput);
+
+		otherOutput->connections.push_back(thisInput);
+		thisInput->parent = this;
+		otherOutput->parent = gate;
+	}*/
 }
 
 

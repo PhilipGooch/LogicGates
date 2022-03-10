@@ -366,11 +366,11 @@ void Application::HandleInput()
 			{
 				for (int i = 0; i < 3; i++)
 				{
-					if (selectedGate->m_nodes[i].connection)
-					{
-						selectedGate->m_nodes[i].connection->connection = nullptr;
-						selectedGate->m_nodes[i].connection = nullptr;
-					}
+					//if (selectedGate->m_nodes[i].connection)
+					//{
+					//	selectedGate->m_nodes[i].connection->connection = nullptr;
+					//	selectedGate->m_nodes[i].connection = nullptr;
+					//}
 				}
 				for (int i = 0; i < gates.size(); i++)
 				{
@@ -497,11 +497,12 @@ void Application::Render()
 
 	for (Gate* gate : gates)
 	{
-		// loop through input nodes instead to allow for many to 1 connections from output...
-			if (gate->m_nodes[2].connection)
+		for (Gate::Node* connection : gate->m_nodes[2].connections)
+		{
+			if (connection)
 			{
 				sf::Vector2f connectorPosition = sf::Vector2f(gate->GetWorldPosition() + gate->m_nodes[2].position);
-				sf::Vector2f otherConnectorPosition = sf::Vector2f(gate->m_nodes[2].connection->parent->GetWorldPosition() + gate->m_nodes[2].connection->position);
+				sf::Vector2f otherConnectorPosition = sf::Vector2f(connection->parent->GetWorldPosition() + connection->position);
 
 				sf::RectangleShape square;
 				square.setSize(sf::Vector2f(1, 1));
@@ -510,18 +511,18 @@ void Application::Render()
 				window->draw(square);
 				square.setPosition(otherConnectorPosition);
 				window->draw(square);
-				
+
 
 				sf::Vertex line[] =
 				{
 					sf::Vertex(connectorPosition + sf::Vector2f(0.5f, 0.5f), gate->output ? sf::Color::Red : sf::Color::Black),
 					sf::Vertex(otherConnectorPosition + sf::Vector2f(0.5f, 0.5f), gate->output ? sf::Color::Red : sf::Color::Black)
 				};
-				
+
 				window->draw(line, 2, sf::Lines);
 			}
-			
-			
+
+		}
 		
 	}
 
