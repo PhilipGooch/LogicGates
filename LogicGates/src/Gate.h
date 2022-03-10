@@ -85,6 +85,12 @@ public:
 		Gate(gridPosition)
 	{
 		m_type = _NOT_;
+
+		m_nodes[0].position = sf::Vector2i(1, 4);
+		m_nodes[1].position = sf::Vector2i(0, 0);
+
+		m_nodes[0].rectangle = { 0, 2, 4, 4 };
+		m_nodes[1].rectangle = { 0, 0, 0, 0 };
 	}
 
 	~NOT()
@@ -93,12 +99,15 @@ public:
 
 	void Update() override
 	{
-
-
-		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
-
-		output = false;
+		if (m_nodes[0].connections.empty())
+		{
+			output = false;
+		}
+		else
+		{
+			bool a = m_nodes[0].connections[0]->parent->output;
+			output = !a;
+		}
 	}
 };
 
@@ -122,12 +131,16 @@ public:
 
 	void Update() override
 	{
-		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
-
-		//output = (m_nodes[0].connection && m_nodes[1].connection) && (a && b);
-
-		output = false;
+		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		{
+			output = false;
+		}
+		else
+		{
+			bool a = m_nodes[0].connections[0]->parent->output;
+			bool b = m_nodes[1].connections[0]->parent->output;
+			output = a && b;
+		}
 	}
 };
 
@@ -151,12 +164,16 @@ public:
 
 	void Update() override
 	{
-		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
-		//
-		//output = (m_nodes[0].connection && m_nodes[1].connection) && (a || b);
-
-		output = false;
+		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		{
+			output = false;
+		}
+		else
+		{
+			bool a = m_nodes[0].connections[0]->parent->output;
+			bool b = m_nodes[1].connections[0]->parent->output;
+			output = a || b;
+		}
 	}
 };
 
@@ -180,12 +197,16 @@ public:
 
 	void Update() override
 	{
-		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
-		//
-		//output = (m_nodes[0].connection && m_nodes[1].connection) && (!(a && b));
-
-		output = false;
+		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		{
+			output = false;
+		}
+		else
+		{
+			bool a = m_nodes[0].connections[0]->parent->output;
+			bool b = m_nodes[1].connections[0]->parent->output;
+			output = !(a && b);
+		}
 	}
 };
 
@@ -208,12 +229,16 @@ public:
 
 	void Update() override
 	{
-		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
-		//
-		//output = (m_nodes[0].connection && m_nodes[1].connection) && (!(a || b));
-
-		output = false;
+		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		{
+			output = false;
+		}
+		else
+		{
+			bool a = m_nodes[0].connections[0]->parent->output;
+			bool b = m_nodes[1].connections[0]->parent->output;
+			output = !(a || b);
+		}
 	}
 };
 
@@ -237,12 +262,16 @@ public:
 
 	void Update() override
 	{
-		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
-		//
-		//output = (m_nodes[0].connection && m_nodes[1].connection) && ((a && !b) || (b && !a));
-
-		output = false;
+		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		{
+			output = false;
+		}
+		else
+		{
+			bool a = m_nodes[0].connections[0]->parent->output;
+			bool b = m_nodes[1].connections[0]->parent->output;
+			output = (a && !b) || (b && !a);
+		}
 	}
 };
 
@@ -266,12 +295,18 @@ public:
 
 	void Update() override
 	{
-		//bool a = m_nodes[0].connection ? m_nodes[0].connection->parent->output : false;
-		//bool b = m_nodes[1].connection ? m_nodes[1].connection->parent->output : false;
-		//
-		//output = (m_nodes[0].connection && m_nodes[1].connection) && (!((a && !b) || (b && !a)));
-
 		output = false;
+
+		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		{
+			output = false;
+		}
+		else
+		{
+			bool a = m_nodes[0].connections[0]->parent->output;
+			bool b = m_nodes[1].connections[0]->parent->output;
+			output = !((a && !b) || (b && !a));
+		}
 	}
 };
 
