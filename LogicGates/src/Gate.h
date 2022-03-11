@@ -43,11 +43,16 @@ public:
 
 	struct Node
 	{
+		enum TYPE
+		{
+			INPUT,
+			OUTPUT
+		};
 		Gate* parent;
 		std::vector<Node*> connections;
 		sf::Vector2i position;
 		sf::FloatRect rectangle;
-		bool on = false;
+		TYPE type;
 
 		bool Clicked(sf::Vector2f mouse) 
 		{ 
@@ -68,8 +73,8 @@ public:
 	inline bool GetInstantiated() { return m_instantiated; }
 	inline int GetType() { return m_type; }
 
-	void ConnectOutputToInput(Gate* gate, int input);
-	void ConnectInputAToOutput(Gate* gate, int input);
+	void ConnectOutputToInput(Gate* gate, Node* input);
+	void ConnectInputAToOutput(Gate* gate, Node* input);
 
 	bool Clicked(sf::Vector2f mouse);
 
@@ -117,6 +122,22 @@ public:
 
 		m_nodes[0].rectangle = { 0, 2, 4, 4 };
 		m_nodes[1].rectangle = { 0, 0, 0, 0 };*/
+
+		Node node;
+		node.parent = this;
+
+		node.type = Node::INPUT;
+
+		node.position = sf::Vector2i(1, 4);
+		node.rectangle = { 0, 2, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(23, 4);
+		node.rectangle = { 21, 2, 5, 5 };
+		outputNodes.push_back(node);
+
 	}
 
 	~NOT()
@@ -125,15 +146,17 @@ public:
 
 	void Update(float deltaTime) override
 	{
-		/*if (m_nodes[0].connections.empty())
+		for (const Node& node : inputNodes)
 		{
-			output = false;
+			if (node.connections.empty())
+			{
+				output = false;
+				return;
+			}
 		}
-		else
-		{
-			bool a = m_nodes[0].connections[0]->parent->output;
-			output = !a;
-		}*/
+
+		bool a = inputNodes[0].connections[0]->parent->output;
+		output = !a;
 	}
 };
 
@@ -155,6 +178,8 @@ public:
 		Node node;
 		node.parent = this;
 
+		node.type = Node::INPUT;
+
 		node.position = sf::Vector2i(1, 2);
 		node.rectangle = { 0, 0, 4, 4 };
 		inputNodes.push_back(node);
@@ -162,6 +187,8 @@ public:
 		node.position = sf::Vector2i(1, 6);
 		node.rectangle = { 0, 5, 4, 4 };
 		inputNodes.push_back(node);
+
+		node.type = Node::OUTPUT;
 
 		node.position = sf::Vector2i(23, 4);
 		node.rectangle = { 21, 2, 5, 5 };
@@ -202,6 +229,27 @@ public:
 		Gate(gridPosition)
 	{
 		m_type = _OR_;
+
+		rectangle = { 0, 0, 25, 9 };
+
+		Node node;
+		node.parent = this;
+
+		node.type = Node::INPUT;
+
+		node.position = sf::Vector2i(1, 2);
+		node.rectangle = { 0, 0, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.position = sf::Vector2i(1, 6);
+		node.rectangle = { 0, 5, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(23, 4);
+		node.rectangle = { 21, 2, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~OR()
@@ -210,16 +258,17 @@ public:
 
 	void Update(float deltaTime) override
 	{
-		/*if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		for (const Node& node : inputNodes)
 		{
-			output = false;
+			if (node.connections.empty())
+			{
+				output = false;
+				return;
+			}
 		}
-		else
-		{
-			bool a = m_nodes[0].connections[0]->parent->output;
-			bool b = m_nodes[1].connections[0]->parent->output;
-			output = a || b;
-		}*/
+		bool a = inputNodes[0].connections[0]->parent->output;
+		bool b = inputNodes[1].connections[0]->parent->output;
+		output = a || b;
 	}
 };
 
@@ -235,6 +284,27 @@ public:
 		Gate(gridPosition)
 	{
 		m_type = _NAND_;
+
+		rectangle = { 0, 0, 25, 9 };
+
+		Node node;
+		node.parent = this;
+
+		node.type = Node::INPUT;
+
+		node.position = sf::Vector2i(1, 2);
+		node.rectangle = { 0, 0, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.position = sf::Vector2i(1, 6);
+		node.rectangle = { 0, 5, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(23, 4);
+		node.rectangle = { 21, 2, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~NAND()
@@ -243,16 +313,18 @@ public:
 
 	void Update(float deltaTime) override
 	{
-		/*if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		for (const Node& node : inputNodes)
 		{
-			output = false;
+			if (node.connections.empty())
+			{
+				output = false;
+				return;
+			}
 		}
-		else
-		{
-			bool a = m_nodes[0].connections[0]->parent->output;
-			bool b = m_nodes[1].connections[0]->parent->output;
-			output = !(a && b);
-		}*/
+
+		bool a = inputNodes[0].connections[0]->parent->output;
+		bool b = inputNodes[1].connections[0]->parent->output;
+		output = !(a && b);
 	}
 };
 
@@ -267,6 +339,27 @@ public:
 		Gate(gridPosition)
 	{
 		m_type = _NOR_;
+
+		rectangle = { 0, 0, 25, 9 };
+
+		Node node;
+		node.parent = this;
+
+		node.type = Node::INPUT;
+
+		node.position = sf::Vector2i(1, 2);
+		node.rectangle = { 0, 0, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.position = sf::Vector2i(1, 6);
+		node.rectangle = { 0, 5, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(23, 4);
+		node.rectangle = { 21, 2, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~NOR()
@@ -275,16 +368,18 @@ public:
 
 	void Update(float deltaTime) override
 	{
-		/*if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		for (const Node& node : inputNodes)
 		{
-			output = false;
+			if (node.connections.empty())
+			{
+				output = false;
+				return;
+			}
 		}
-		else
-		{
-			bool a = m_nodes[0].connections[0]->parent->output;
-			bool b = m_nodes[1].connections[0]->parent->output;
-			output = !(a || b);
-		}*/
+
+		bool a = inputNodes[0].connections[0]->parent->output;
+		bool b = inputNodes[1].connections[0]->parent->output;
+		output = !(a || b);
 	}
 };
 
@@ -300,6 +395,27 @@ public:
 		Gate(gridPosition)
 	{
 		m_type = _XOR_;
+
+		rectangle = { 0, 0, 25, 9 };
+
+		Node node;
+		node.parent = this;
+
+		node.type = Node::INPUT;
+
+		node.position = sf::Vector2i(1, 2);
+		node.rectangle = { 0, 0, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.position = sf::Vector2i(1, 6);
+		node.rectangle = { 0, 5, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(23, 4);
+		node.rectangle = { 21, 2, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~XOR()
@@ -308,6 +424,19 @@ public:
 
 	void Update(float deltaTime) override
 	{
+		for (const Node& node : inputNodes)
+		{
+			if (node.connections.empty())
+			{
+				output = false;
+				return;
+			}
+		}
+
+		bool a = inputNodes[0].connections[0]->parent->output;
+		bool b = inputNodes[1].connections[0]->parent->output;
+		output = (a && !b) || (b && !a);
+
 		/*if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
 		{
 			output = false;
@@ -333,6 +462,27 @@ public:
 		Gate(gridPosition)
 	{
 		m_type = _XNOR_;
+
+		rectangle = { 0, 0, 25, 9 };
+
+		Node node;
+		node.parent = this;
+
+		node.type = Node::INPUT;
+
+		node.position = sf::Vector2i(1, 2);
+		node.rectangle = { 0, 0, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.position = sf::Vector2i(1, 6);
+		node.rectangle = { 0, 5, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(23, 4);
+		node.rectangle = { 21, 2, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~XNOR()
@@ -341,18 +491,18 @@ public:
 
 	void Update(float deltaTime) override
 	{
-		output = false;
-
-		/*if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
+		for (const Node& node : inputNodes)
 		{
-			output = false;
+			if (node.connections.empty())
+			{
+				output = false;
+				return;
+			}
 		}
-		else
-		{
-			bool a = m_nodes[0].connections[0]->parent->output;
-			bool b = m_nodes[1].connections[0]->parent->output;
-			output = !((a && !b) || (b && !a));
-		}*/
+
+		bool a = inputNodes[0].connections[0]->parent->output;
+		bool b = inputNodes[1].connections[0]->parent->output;
+		output = !((a && !b) || (b && !a));
 	}
 };
 
@@ -372,13 +522,14 @@ public:
 
 		rectangle = { 0, 0, 19, 11 };
 
-		/*m_nodes[0].position = sf::Vector2i(0, 0);
-		m_nodes[1].position = sf::Vector2i(0, 0);
-		m_nodes[2].position = sf::Vector2i(17, 5);
+		Node node;
+		node.parent = this;
 
-		m_nodes[0].rectangle = { 0, 0, 0, 0 };
-		m_nodes[1].rectangle = { 0, 0, 0, 0 };
-		m_nodes[2].rectangle = { 17, 3, 5, 5 };*/
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(17, 5);
+		node.rectangle = { 17, 3, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~On()
@@ -407,13 +558,14 @@ public:
 
 		rectangle = { 0, 0, 19, 11 };
 
-		/*m_nodes[0].position = sf::Vector2i(0, 0);
-		m_nodes[1].position = sf::Vector2i(0, 0);
-		m_nodes[2].position = sf::Vector2i(17, 5);
+		Node node;
+		node.parent = this;
 
-		m_nodes[0].rectangle = { 0, 0, 0, 0 };
-		m_nodes[1].rectangle = { 0, 0, 0, 0 };
-		m_nodes[2].rectangle = { 17, 3, 5, 5 };*/
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(17, 5);
+		node.rectangle = { 17, 3, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~Off()
@@ -442,13 +594,14 @@ public:
 
 		rectangle = { 0, 0, 19, 11 };
 
-		/*m_nodes[0].position = sf::Vector2i(0, 0);
-		m_nodes[1].position = sf::Vector2i(0, 0);
-		m_nodes[2].position = sf::Vector2i(17, 5);
+		Node node;
+		node.parent = this;
 
-		m_nodes[0].rectangle = { 0, 0, 0, 0 };
-		m_nodes[1].rectangle = { 0, 0, 0, 0 };
-		m_nodes[2].rectangle = { 17, 3, 5, 5 };*/
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(17, 5);
+		node.rectangle = { 17, 3, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~Clock()
@@ -496,13 +649,14 @@ public:
 
 		rectangle = { 0, 0, 19, 11 };
 
-		/*m_nodes[0].position = sf::Vector2i(0, 0);
-		m_nodes[1].position = sf::Vector2i(0, 0);
-		m_nodes[2].position = sf::Vector2i(17, 5);
+		Node node;
+		node.parent = this;
 
-		m_nodes[0].rectangle = { 0, 0, 0, 0 };
-		m_nodes[1].rectangle = { 0, 0, 0, 0 };
-		m_nodes[2].rectangle = { 17, 3, 5, 5 };*/
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(17, 5);
+		node.rectangle = { 17, 3, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~Button()
@@ -538,13 +692,14 @@ public:
 
 		rectangle = { 0, 0, 19, 11 };
 
-		/*m_nodes[0].position = sf::Vector2i(0, 0);
-		m_nodes[1].position = sf::Vector2i(0, 0);
-		m_nodes[2].position = sf::Vector2i(17, 5);
+		Node node;
+		node.parent = this;
 
-		m_nodes[0].rectangle = { 0, 0, 0, 0 };
-		m_nodes[1].rectangle = { 0, 0, 0, 0 };
-		m_nodes[2].rectangle = { 17, 3, 5, 5 };*/
+		node.type = Node::OUTPUT;
+
+		node.position = sf::Vector2i(17, 5);
+		node.rectangle = { 17, 3, 5, 5 };
+		outputNodes.push_back(node);
 	}
 
 	~Switch()
@@ -581,13 +736,14 @@ public:
 
 		rectangle = { 0, 0, 7, 11 };
 
-		/*m_nodes[0].position = sf::Vector2i(3, 9);
-		m_nodes[1].position = sf::Vector2i(0, 0);
-		m_nodes[2].position = sf::Vector2i(0, 0);
+		Node node;
+		node.parent = this;
 
-		m_nodes[0].rectangle = { 1, 7, 4, 4 };
-		m_nodes[1].rectangle = { 0, 0, 0, 0 };
-		m_nodes[2].rectangle = { 0, 0, 0, 0 };*/
+		node.type = Node::INPUT;
+
+		node.position = sf::Vector2i(3, 9);
+		node.rectangle = { 1, 7, 4, 4 };
+		inputNodes.push_back(node);
 	}
 
 	~Light()
@@ -635,13 +791,26 @@ public:
 
 		rectangle = { 0, 0, 18, 15 };
 
-		/*m_nodes[0].position = sf::Vector2i(0, 0);
-		m_nodes[1].position = sf::Vector2i(0, 0);
-		m_nodes[2].position = sf::Vector2i(0, 0);
+		Node node;
+		node.parent = this;
 
-		m_nodes[0].rectangle = { 0, 0, 0, 0 };
-		m_nodes[1].rectangle = { 0, 0, 0, 0 };
-		m_nodes[2].rectangle = { 0, 0, 0, 0 };*/
+		node.type = Node::INPUT;
+
+		node.position = sf::Vector2i(1, 1);
+		node.rectangle = { 0, 0, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.position = sf::Vector2i(1, 5);
+		node.rectangle = { 0, 4, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.position = sf::Vector2i(1, 9);
+		node.rectangle = { 0, 8, 4, 4 };
+		inputNodes.push_back(node);
+
+		node.position = sf::Vector2i(1, 13);
+		node.rectangle = { 0, 12, 4, 3 };
+		inputNodes.push_back(node);
 	}
 
 	~Display()

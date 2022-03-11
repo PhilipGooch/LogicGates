@@ -298,34 +298,60 @@ void Application::HandleInput()
 				selectedGate = gate;
 				gateWorldSave = sf::Vector2f(selectedGate->GetWorldPosition());
 				gateOffsetWorldSave = mouseWorldPosition - gateWorldSave - sf::Vector2f(gate->rectangle.width / 2, gate->rectangle.height / 2);
-				// top input node
-				if (gate->inputNodes[0].Clicked(mouseWorldPosition))
+				for (int i = 0; i < gate->inputNodes.size(); i++)
 				{
-					connecting = true;
-					gateA = gate;
-					gateANode = 0;
-					selectedGate = nullptr;
-					wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[0].position);
+					if (gate->inputNodes[i].Clicked(mouseWorldPosition))
+					{
+						connecting = true;
+						gateA = gate;
+						gateANode = &gate->inputNodes[i];
+						selectedGate = nullptr;
+						wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[i].position);
+						break;
+					}
 				}
-				// bottom input node
-				else if (gate->inputNodes[1].Clicked(mouseWorldPosition))
+				for (int i = 0; i < gate->outputNodes.size(); i++)
 				{
-					connecting = true;
-					gateA = gate;
-					gateANode = 1;
-					selectedGate = nullptr;
-					wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[1].position);
-				}
-				// output node
-				else if (gate->outputNodes[0].Clicked(mouseWorldPosition))
-				{
-					connecting = true;
-					gateA = gate;
-					gateANode = 2;
-					selectedGate = nullptr;
-					wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->outputNodes[0].position);
+					if (gate->outputNodes[i].Clicked(mouseWorldPosition))
+					{
+						connecting = true;
+						gateA = gate;
+						gateANode = &gate->outputNodes[i];
+						selectedGate = nullptr;
+						wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->outputNodes[i].position);
+						break;
+					}
 				}
 				break;
+
+			//	// top input node
+			//	if (gate->inputNodes[0].Clicked(mouseWorldPosition))
+			//	{
+			//		connecting = true;
+			//		gateA = gate;
+			//		gateANode = 0;
+			//		selectedGate = nullptr;
+			//		wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[0].position);
+			//	}
+			//	// bottom input node
+			//	else if (gate->inputNodes[1].Clicked(mouseWorldPosition))
+			//	{
+			//		connecting = true;
+			//		gateA = gate;
+			//		gateANode = 1;
+			//		selectedGate = nullptr;
+			//		wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[1].position);
+			//	}
+			//	// output node
+			//	else if (gate->outputNodes[0].Clicked(mouseWorldPosition))
+			//	{
+			//		connecting = true;
+			//		gateA = gate;
+			//		gateANode = 2;
+			//		selectedGate = nullptr;
+			//		wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->outputNodes[0].position);
+			//	}
+			//	break;
 			}
 			
 		}
@@ -373,33 +399,70 @@ void Application::HandleInput()
 			connection = false;
 			for (Gate* gate : gates)
 			{
-				// top input node
-				if (gate->inputNodes[0].Clicked(mouseWorldPosition))
+				if (gate == gateA) continue;
+
+				bool clicked = false;
+				for (int i = 0; i < gate->inputNodes.size(); i++)
 				{
-					connection = true;
-					gateB = gate;
-					gateBNode = 0;
-					wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[0].position);
+					if (gate->inputNodes[i].Clicked(mouseWorldPosition))
+					{
+						connection = true;
+						gateB = gate;
+						gateBNode = &gate->inputNodes[i];
+						selectedGate = nullptr;
+						wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[i].position);
+						clicked = true;
+						break;
+					}
+				}
+				if (clicked)
+				{
 					break;
 				}
-				// bottom input node
-				else if (gate->inputNodes[1].Clicked(mouseWorldPosition))
+				for (int i = 0; i < gate->outputNodes.size(); i++)
 				{
-					connection = true;
-					gateB = gate;
-					gateBNode = 1;
-					wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[1].position);
+					if (gate->outputNodes[i].Clicked(mouseWorldPosition))
+					{
+						connection = true;
+						gateB = gate;
+						gateBNode = &gate->outputNodes[i];
+						wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->outputNodes[i].position);
+						clicked = true;
+						break;
+					}
+				}
+				if (clicked)
+				{
 					break;
 				}
-				// output node
-				else if (gate->outputNodes[0].Clicked(mouseWorldPosition))
-				{
-					connection = true;
-					gateB = gate;
-					gateBNode = 2;
-					wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->outputNodes[0].position);
-					break;
-				}
+
+				//// top input node
+				//if (gate->inputNodes[0].Clicked(mouseWorldPosition))
+				//{
+				//	connection = true;
+				//	gateB = gate;
+				//	gateBNode = 0;
+				//	wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[0].position);
+				//	break;
+				//}
+				//// bottom input node
+				//else if (gate->inputNodes[1].Clicked(mouseWorldPosition))
+				//{
+				//	connection = true;
+				//	gateB = gate;
+				//	gateBNode = 1;
+				//	wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[1].position);
+				//	break;
+				//}
+				//// output node
+				//else if (gate->outputNodes[0].Clicked(mouseWorldPosition))
+				//{
+				//	connection = true;
+				//	gateB = gate;
+				//	gateBNode = 2;
+				//	wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->outputNodes[0].position);
+				//	break;
+				//}
 			}
 		}
 	}
@@ -417,19 +480,13 @@ void Application::HandleInput()
 
 		if (connection)
 		{
-			//if (!gateA->m_nodes[gateANode].connection && !gateB->m_nodes[gateBNode].connection)
+			if (gateANode->type == Gate::Node::OUTPUT && gateBNode->type == Gate::Node::INPUT)
 			{
-				if (gateANode == 2 && (gateBNode == 0 || gateBNode == 1))
-				{
-					//if (!gateB->m_nodes[gateBNode].connection)
-					{
-						gateA->ConnectOutputToInput(gateB, gateBNode);
-					}
-				}
-				if ((gateANode == 0 || gateANode == 1) && gateBNode == 2)
-				{
-					gateA->ConnectInputAToOutput(gateB, gateANode);
-				}
+				gateA->ConnectOutputToInput(gateB, gateBNode);
+			}
+			else if (gateANode->type == Gate::Node::INPUT && gateBNode->type == Gate::Node::OUTPUT)
+			{
+				gateA->ConnectInputAToOutput(gateB, gateANode);
 			}
 		}
 
@@ -624,19 +681,19 @@ void Application::Render()
 		sf::RectangleShape square;
 		square.setSize(sf::Vector2f(1, 1));
 		square.setPosition(wireAWorldSave);
-		square.setFillColor(gateANode == 2 ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black);
+		square.setFillColor(gateANode->type == Gate::Node::OUTPUT ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black);
 		window->draw(square);
 
 		sf::Vertex line[] =
 		{
-			sf::Vertex(wireAWorldSave + sf::Vector2f(0.5f, 0.5f), gateANode == 2 ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black),
-			sf::Vertex(mouseWorldPosition + sf::Vector2f(0.5f, 0.5f), gateANode == 2 ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black)
+			sf::Vertex(wireAWorldSave + sf::Vector2f(0.5f, 0.5f), gateANode->type == Gate::Node::OUTPUT ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black),
+			sf::Vertex(mouseWorldPosition + sf::Vector2f(0.5f, 0.5f), gateANode->type == Gate::Node::OUTPUT ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black)
 			
 		};
 
 		if (connection)
 		{
-			line[1] = sf::Vertex(wireBWorldSave + sf::Vector2f(0.5f, 0.5f), gateANode == 2 ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black);
+			line[1] = sf::Vertex(wireBWorldSave + sf::Vector2f(0.5f, 0.5f), gateANode->type == Gate::Node::OUTPUT ? gateA->output ? sf::Color::Red : sf::Color::Black : sf::Color::Black);
 			square.setPosition(wireBWorldSave);
 			window->draw(square);
 		}
@@ -646,6 +703,8 @@ void Application::Render()
 
 	for (Gate* gate : gates)
 	{
+		if (gate->outputNodes.size() == 0) continue;
+
 		for (Gate::Node* connection : gate->outputNodes[0].connections)
 		{
 			if (connection)

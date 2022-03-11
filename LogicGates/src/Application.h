@@ -101,8 +101,8 @@ private:
 	Gate* selectedGate = nullptr;
 	Gate* gateA = nullptr;
 	Gate* gateB = nullptr;
-	int gateANode = -1;
-	int gateBNode = -1;
+	Gate::Node* gateANode = nullptr;
+	Gate::Node* gateBNode = nullptr;
 
 	std::vector<Gate*> gates;
 

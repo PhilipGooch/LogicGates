@@ -31,10 +31,10 @@ bool Gate::Clicked(sf::Vector2f mouse)
 	return worldRectangle.contains(mouse);
 }
 
-void Gate::ConnectOutputToInput(Gate* gate, int input)
+void Gate::ConnectOutputToInput(Gate* gate, Node* input)
 {
 	Node* thisOutput = &outputNodes[0];
-	Node* otherInput = &gate->inputNodes[input];
+	Node* otherInput = input;
 
 	bool found = false;
 	for (Node* connection : thisOutput->connections)
@@ -70,9 +70,9 @@ void Gate::ConnectOutputToInput(Gate* gate, int input)
 	}
 }
 
-void Gate::ConnectInputAToOutput(Gate* gate, int input)
+void Gate::ConnectInputAToOutput(Gate* gate, Node* input)
 {
-	Node* thisInput = &inputNodes[input];
+	Node* thisInput = input;
 	Node* otherOutput = &gate->outputNodes[0];
 
 	otherOutput->parent->ConnectOutputToInput(thisInput->parent, input);
