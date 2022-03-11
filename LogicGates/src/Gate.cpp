@@ -9,31 +9,9 @@ Gate::Gate(const Gate& gate) :
 
 Gate::Gate(const sf::Vector2i& gridPosition) :
 	m_worldPosition(gridPosition),
-	m_instantiated(false)//,
-	//gateRect(0, 0, 25, 9)
+	m_instantiated(false)
 {
-	rectangle = { 0, 0, 25, 9 };
 	
-	m_nodes[0].parent = this;
-	m_nodes[1].parent = this;
-	m_nodes[2].parent = this;
-
-	m_nodes[0].position = sf::Vector2i(1, 2);
-	m_nodes[1].position = sf::Vector2i(1, 6);
-	m_nodes[2].position = sf::Vector2i(23, 4);
-
-	m_nodes[0].rectangle = { 0, 0, 4, 4 };
-	m_nodes[1].rectangle = { 0, 5, 4, 4 };
-	m_nodes[2].rectangle = { 21, 2, 5, 5 };
-
-
-	//nodePositions[0] = sf::Vector2i(1, 2);
-	//nodePositions[1] = sf::Vector2i(1, 6);
-	//nodePositions[2] = sf::Vector2i(23, 4);
-
-	//nodeRects[0] = { 0, 0, 4, 4};
-	//nodeRects[1] = { 0, 5, 4, 4 };
-	//nodeRects[2] = { 21, 2, 5, 5 };
 }
 
 Gate::~Gate()
@@ -55,8 +33,8 @@ bool Gate::Clicked(sf::Vector2f mouse)
 
 void Gate::ConnectOutputToInput(Gate* gate, int input)
 {
-	Node* thisOutput = &m_nodes[2];
-	Node* otherInput = &gate->m_nodes[input];
+	Node* thisOutput = &outputNodes[0];
+	Node* otherInput = &gate->inputNodes[input];
 
 	bool found = false;
 	for (Node* connection : thisOutput->connections)
@@ -94,8 +72,8 @@ void Gate::ConnectOutputToInput(Gate* gate, int input)
 
 void Gate::ConnectInputAToOutput(Gate* gate, int input)
 {
-	Node* thisInput = &m_nodes[input];
-	Node* otherOutput = &gate->m_nodes[2];
+	Node* thisInput = &inputNodes[input];
+	Node* otherOutput = &gate->outputNodes[0];
 
 	otherOutput->parent->ConnectOutputToInput(thisInput->parent, input);
 
