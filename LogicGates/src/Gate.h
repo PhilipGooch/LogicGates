@@ -29,13 +29,12 @@
 #define _Display7_	25
 #define _Display8_	26
 #define _Display9_	27
-#define _Display0_	28
-#define _DisplayA_	29
-#define _DisplayB_	30
-#define _DisplayC_	31
-#define _DisplayD_	32
-#define _DisplayE_	33
-#define _DisplayF_	34
+#define _DisplayA_	28
+#define _DisplayB_	29
+#define _DisplayC_	30
+#define _DisplayD_	31
+#define _DisplayE_	32
+#define _DisplayF_	33
 
 class Gate
 {
@@ -117,11 +116,7 @@ public:
 	{
 		m_type = _NOT_;
 
-		/*m_nodes[0].position = sf::Vector2i(1, 4);
-		m_nodes[1].position = sf::Vector2i(0, 0);
-
-		m_nodes[0].rectangle = { 0, 2, 4, 4 };
-		m_nodes[1].rectangle = { 0, 0, 0, 0 };*/
+		rectangle = { 0, 0, 25, 9 };
 
 		Node node;
 		node.parent = this;
@@ -819,6 +814,32 @@ public:
 
 	void Update(float deltaTime) override
 	{
+		for (const Node& node : inputNodes)
+		{
+			if (node.connections.empty())
+			{
+				return;
+			}
+		}
+
+		bool a = inputNodes[0].connections[0]->parent->output;
+		bool b = inputNodes[1].connections[0]->parent->output;
+		bool c = inputNodes[2].connections[0]->parent->output;
+		bool d = inputNodes[3].connections[0]->parent->output;
+
+		int A = 0b0001; // 1
+		int B = 0b0010; // 2
+		int C = 0b0100; // 4
+		int D = 0b1000; // 8
+
+		int sum = 0b0000; // 0
+
+		if (a) sum |= A;
+		if (b) sum |= B;
+		if (c) sum |= C;
+		if (d) sum |= D;
+
+		m_type = _Display0_ + sum;
 
 	}
 };

@@ -77,49 +77,6 @@ void Gate::ConnectInputAToOutput(Gate* gate, Node* input)
 
 	otherOutput->parent->ConnectOutputToInput(thisInput->parent, input);
 
-	//bool found = false;
-	//for (Node* connection : otherOutput->connections)
-	//{
-	//	if (connection == thisInput)
-	//	{
-	//		found = true;
-	//		break;
-	//	}
-	//}
-	//if (!found)
-	//{
-	//	thisInput->connections.clear();
-	//	thisInput->connections.push_back(otherOutput);
-	//
-	//	otherOutput->connections.push_back(thisInput);
-	//	thisInput->parent = this;
-	//	otherOutput->parent = gate;
-	//}
-
-
-
-
-	/*Node* thisInput = &m_nodes[input];
-	Node* otherOutput = &gate->m_nodes[2];
-
-	bool found = false;
-	for (Node* connection : otherOutput->connections)
-	{
-		if (connection == thisInput)
-		{
-			found = true;
-			break;
-		}
-	}
-	if (!found)
-	{
-		thisInput->connections.clear();
-		thisInput->connections.push_back(otherOutput);
-
-		otherOutput->connections.push_back(thisInput);
-		thisInput->parent = this;
-		otherOutput->parent = gate;
-	}*/
 }
 
 
