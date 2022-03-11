@@ -8,11 +8,34 @@
 #define _NOR_		4
 #define _XOR_		5
 #define _XNOR_		6
-#define _On_		7
-#define _Off_		8
-#define _Clock_		9
-#define _Button_	10
-#define _Switch_	11
+#define _TRI_		7
+#define _On_		8
+#define _Off_		9
+#define _ClockOff_	10
+#define _ClockOn_	11
+#define _ButtonOff_	12
+#define _ButtonOn_	13
+#define _SwitchOff_	14
+#define _SwitchOn_	15
+#define _LightOff_	16
+#define _LightOn_	17
+#define _Display0_	18
+#define _Display1_	19
+#define _Display2_	20
+#define _Display3_	21
+#define _Display4_	22
+#define _Display5_	23
+#define _Display6_	24
+#define _Display7_	25
+#define _Display8_	26
+#define _Display9_	27
+#define _Display0_	28
+#define _DisplayA_	29
+#define _DisplayB_	30
+#define _DisplayC_	31
+#define _DisplayD_	32
+#define _DisplayE_	33
+#define _DisplayF_	34
 
 class Gate
 {
@@ -22,8 +45,6 @@ public:
 	{
 		Gate* parent;
 		std::vector<Node*> connections;
-
-		//Node* connection = nullptr;
 		sf::Vector2i position;
 		sf::FloatRect rectangle;
 		bool on = false;
@@ -52,7 +73,7 @@ public:
 
 	bool Clicked(sf::Vector2f mouse);
 
-	virtual void Update() {}
+	virtual void Update(float deltaTime) {}
 
 	Node m_nodes[3];
 
@@ -60,12 +81,14 @@ public:
 
 	sf::FloatRect rectangle;
 
+	int m_type;
+
 private:
 	sf::Vector2i m_worldPosition;
 	bool m_instantiated;
 
 protected:
-	int m_type;
+	
 
 	
 };
@@ -97,7 +120,7 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
 		if (m_nodes[0].connections.empty())
 		{
@@ -129,7 +152,7 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
 		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
 		{
@@ -162,7 +185,7 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
 		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
 		{
@@ -195,7 +218,7 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
 		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
 		{
@@ -227,7 +250,7 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
 		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
 		{
@@ -260,7 +283,7 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
 		if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
 		{
@@ -293,7 +316,7 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
 		output = false;
 
@@ -339,7 +362,7 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
 		output = true;
 	}
@@ -374,12 +397,12 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
 		output = false;
 	}
 };
-
+#include <iostream>
 class Clock : public Gate
 {
 public:
@@ -392,7 +415,7 @@ public:
 	Clock(const sf::Vector2i& gridPosition) :
 		Gate(gridPosition)
 	{
-		m_type = _Clock_;
+		m_type = _ClockOff_;
 
 		rectangle = { 0, 0, 19, 11 };
 
@@ -409,10 +432,29 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
-		output = false;
+		timer += deltaTime;
+		if (timer > pulseTime)
+		{
+			output = !output;
+			timer -= pulseTime;
+
+			if (output == true)
+			{
+				m_type = _ClockOn_;
+			}
+			else
+			{
+				m_type = _ClockOff_;
+			}
+		}
+
 	}
+
+private:
+	float timer = 0.0f;
+	float pulseTime = 500.0f;
 };
 
 class Button : public Gate
@@ -427,7 +469,7 @@ public:
 	Button(const sf::Vector2i& gridPosition) :
 		Gate(gridPosition)
 	{
-		m_type = _Button_;
+		m_type = _ButtonOff_;
 
 		rectangle = { 0, 0, 19, 11 };
 
@@ -444,9 +486,16 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
-		output = false;
+		if (m_type == _ButtonOff_)
+		{
+			output = false;
+		}
+		else if (m_type == _ButtonOn_)
+		{
+			output = true;
+		}
 	}
 };
 
@@ -462,7 +511,7 @@ public:
 	Switch(const sf::Vector2i& gridPosition) :
 		Gate(gridPosition)
 	{
-		m_type = _Switch_;
+		m_type = _SwitchOff_;
 
 		rectangle = { 0, 0, 19, 11 };
 
@@ -479,11 +528,107 @@ public:
 	{
 	}
 
-	void Update() override
+	void Update(float deltaTime) override
 	{
-		output = false;
+		if (m_type == _SwitchOff_)
+		{
+			output = false;
+		}
+		else if (m_type == _SwitchOn_)
+		{
+			output = true;
+		}
+		
 	}
 };
 
+class Light : public Gate
+{
+public:
+	Light(const Gate& gate) :
+		Gate(gate)
+	{
+
+	}
+
+	Light(const sf::Vector2i& gridPosition) :
+		Gate(gridPosition)
+	{
+		m_type = _LightOff_;
+
+		rectangle = { 0, 0, 7, 11 };
+
+		m_nodes[0].position = sf::Vector2i(3, 9);
+		m_nodes[1].position = sf::Vector2i(0, 0);
+		m_nodes[2].position = sf::Vector2i(0, 0);
+
+		m_nodes[0].rectangle = { 1, 7, 4, 4 };
+		m_nodes[1].rectangle = { 0, 0, 0, 0 };
+		m_nodes[2].rectangle = { 0, 0, 0, 0 };
+	}
+
+	~Light()
+	{
+	}
+
+	void Update(float deltaTime) override
+	{
+		if (m_nodes[0].connections.empty())
+		{
+			output = false;
+		}
+		else
+		{
+			bool a = m_nodes[0].connections[0]->parent->output;
+			output = a;
+		}
+
+
+		if (output == true)
+		{
+			m_type = _LightOn_;
+		}
+		else
+		{
+			m_type = _LightOff_;
+		}
+
+	}
+};
+
+class Display : public Gate
+{
+public:
+	Display(const Gate& gate) :
+		Gate(gate)
+	{
+
+	}
+
+	Display(const sf::Vector2i& gridPosition) :
+		Gate(gridPosition)
+	{
+		m_type = _Display0_;
+
+		rectangle = { 0, 0, 18, 15 };
+
+		m_nodes[0].position = sf::Vector2i(0, 0);
+		m_nodes[1].position = sf::Vector2i(0, 0);
+		m_nodes[2].position = sf::Vector2i(0, 0);
+
+		m_nodes[0].rectangle = { 0, 0, 0, 0 };
+		m_nodes[1].rectangle = { 0, 0, 0, 0 };
+		m_nodes[2].rectangle = { 0, 0, 0, 0 };
+	}
+
+	~Display()
+	{
+	}
+
+	void Update(float deltaTime) override
+	{
+
+	}
+};
 
 

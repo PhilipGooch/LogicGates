@@ -17,11 +17,34 @@ Application::Application()
 	textureNOR.loadFromFile("Images/NOR.png");
 	textureXOR.loadFromFile("Images/XOR.png");
 	textureXNOR.loadFromFile("Images/XNOR.png");
+	textureTRI.loadFromFile("Images/TRI.png");
 	textureOn.loadFromFile("Images/On.png");
 	textureOff.loadFromFile("Images/Off.png");
-	textureClock.loadFromFile("Images/Clock.png");
-	textureButton.loadFromFile("Images/Button.png");
-	textureSwitch.loadFromFile("Images/Switch.png");
+	textureClockOff.loadFromFile("Images/ClockOff.png");
+	textureClockOn.loadFromFile("Images/ClockOn.png");
+	textureButtonOff.loadFromFile("Images/ButtonOff.png");
+	textureButtonOn.loadFromFile("Images/ButtonOn.png");
+	textureSwitchOff.loadFromFile("Images/SwitchOff.png");
+	textureSwitchOn.loadFromFile("Images/SwitchOn.png");
+	textureLightOff.loadFromFile("Images/LightOff.png");
+	textureLightOn.loadFromFile("Images/LightOn.png");
+	textureDisplay0.loadFromFile("Images/Display0.png");
+	textureDisplay1.loadFromFile("Images/Display1.png");
+	textureDisplay2.loadFromFile("Images/Display2.png");
+	textureDisplay3.loadFromFile("Images/Display3.png");
+	textureDisplay4.loadFromFile("Images/Display4.png");
+	textureDisplay5.loadFromFile("Images/Display5.png");
+	textureDisplay6.loadFromFile("Images/Display6.png");
+	textureDisplay7.loadFromFile("Images/Display7.png");
+	textureDisplay8.loadFromFile("Images/Display8.png");
+	textureDisplay9.loadFromFile("Images/Display9.png");
+	textureDisplay0.loadFromFile("Images/Display0.png");
+	textureDisplayA.loadFromFile("Images/DisplayA.png");
+	textureDisplayB.loadFromFile("Images/DisplayB.png");
+	textureDisplayC.loadFromFile("Images/DisplayC.png");
+	textureDisplayD.loadFromFile("Images/DisplayD.png");
+	textureDisplayE.loadFromFile("Images/DisplayE.png");
+	textureDisplayF.loadFromFile("Images/DisplayF.png");
 
 	spriteNOT.setTexture(textureNOT);
 	spriteAND.setTexture(textureAND);
@@ -30,11 +53,34 @@ Application::Application()
 	spriteNOR.setTexture(textureNOR);
 	spriteXOR.setTexture(textureXOR);
 	spriteXNOR.setTexture(textureXNOR);
+	spriteTRI.setTexture(textureTRI);
 	spriteOn.setTexture(textureOn);
 	spriteOff.setTexture(textureOff);
-	spriteClock.setTexture(textureClock);
-	spriteButton.setTexture(textureButton);
-	spriteSwitch.setTexture(textureSwitch);
+	spriteClockOff.setTexture(textureClockOff);
+	spriteClockOn.setTexture(textureClockOn);
+	spriteButtonOff.setTexture(textureButtonOff);
+	spriteButtonOn.setTexture(textureButtonOn);
+	spriteSwitchOff.setTexture(textureSwitchOff);
+	spriteSwitchOn.setTexture(textureSwitchOn);
+	spriteLightOff.setTexture(textureLightOff);
+	spriteLightOn.setTexture(textureLightOn);
+	spriteDisplay0.setTexture(textureDisplay0);
+	spriteDisplay1.setTexture(textureDisplay1);
+	spriteDisplay2.setTexture(textureDisplay2);
+	spriteDisplay3.setTexture(textureDisplay3);
+	spriteDisplay4.setTexture(textureDisplay4);
+	spriteDisplay5.setTexture(textureDisplay5);
+	spriteDisplay6.setTexture(textureDisplay6);
+	spriteDisplay7.setTexture(textureDisplay7);
+	spriteDisplay8.setTexture(textureDisplay8);
+	spriteDisplay9.setTexture(textureDisplay9);
+	spriteDisplay0.setTexture(textureDisplay0);
+	spriteDisplayA.setTexture(textureDisplayA);
+	spriteDisplayB.setTexture(textureDisplayB);
+	spriteDisplayC.setTexture(textureDisplayC);
+	spriteDisplayD.setTexture(textureDisplayD);
+	spriteDisplayE.setTexture(textureDisplayE);
+	spriteDisplayF.setTexture(textureDisplayF);
 
 	sprites[_NOT_] = &spriteNOT;
 	sprites[_AND_] = &spriteAND;
@@ -43,13 +89,34 @@ Application::Application()
 	sprites[_NOR_] = &spriteNOR;
 	sprites[_XOR_] = &spriteXOR;
 	sprites[_XNOR_] = &spriteXNOR;
+	sprites[_TRI_] = &spriteTRI;
 	sprites[_On_] = &spriteOn;
 	sprites[_Off_] = &spriteOff;
-	sprites[_Clock_] = &spriteClock;
-	sprites[_Button_] = &spriteButton;
-	sprites[_Switch_] = &spriteSwitch;
-
-	
+	sprites[_ClockOff_] = &spriteClockOff;
+	sprites[_ClockOn_] = &spriteClockOn;
+	sprites[_ButtonOff_] = &spriteButtonOff;
+	sprites[_ButtonOn_] = &spriteButtonOn;
+	sprites[_SwitchOff_] = &spriteSwitchOff;
+	sprites[_SwitchOn_] = &spriteSwitchOn;
+	sprites[_LightOff_] = &spriteLightOff;
+	sprites[_LightOn_] = &spriteLightOn;
+	sprites[_Display0_] = &spriteDisplay0;
+	sprites[_Display1_] = &spriteDisplay1;
+	sprites[_Display2_] = &spriteDisplay2;
+	sprites[_Display3_] = &spriteDisplay3;
+	sprites[_Display4_] = &spriteDisplay4;
+	sprites[_Display5_] = &spriteDisplay5;
+	sprites[_Display6_] = &spriteDisplay6;
+	sprites[_Display7_] = &spriteDisplay7;
+	sprites[_Display8_] = &spriteDisplay8;
+	sprites[_Display9_] = &spriteDisplay9;
+	sprites[_Display0_] = &spriteDisplay0;
+	sprites[_DisplayA_] = &spriteDisplayA;
+	sprites[_DisplayB_] = &spriteDisplayB;
+	sprites[_DisplayC_] = &spriteDisplayC;
+	sprites[_DisplayD_] = &spriteDisplayD;
+	sprites[_DisplayE_] = &spriteDisplayE;
+	sprites[_DisplayF_] = &spriteDisplayF;
 }
 
 Application::~Application()
@@ -155,7 +222,9 @@ void Application::HandleInput()
 		input.getKeyPressed(sf::Keyboard::Num9) ||
 		input.getKeyPressed(sf::Keyboard::Num0) ||
 		input.getKeyPressed(sf::Keyboard::Dash) ||
-		input.getKeyPressed(sf::Keyboard::Equal))
+		input.getKeyPressed(sf::Keyboard::Equal) ||
+		input.getKeyPressed(sf::Keyboard::BackSpace) ||
+		input.getKeyPressed(sf::Keyboard::Home))
 	{
 		if (selectedGate)
 		{
@@ -178,6 +247,8 @@ void Application::HandleInput()
 	if (input.getKeyPressed(sf::Keyboard::Num0)) selectedGate = new Clock(input.getMousePosition() / zoom);
 	if (input.getKeyPressed(sf::Keyboard::Dash)) selectedGate = new Button(input.getMousePosition() / zoom);
 	if (input.getKeyPressed(sf::Keyboard::Equal)) selectedGate = new Switch(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::BackSpace)) selectedGate = new Light(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Home)) selectedGate = new Display(input.getMousePosition() / zoom);
 
 
 	if (input.getMouseLeftDown())
@@ -198,6 +269,28 @@ void Application::HandleInput()
 		bool clickedOnGate = false;
 		for (Gate* gate : gates)
 		{
+			if (gate->GetInstantiated())
+			{
+				if (gate->m_type == _ButtonOff_ || gate->m_type == _ButtonOn_)
+				{
+					sf::FloatRect rect = { gate->GetWorldPosition().x + gate->rectangle.left + 3, gate->GetWorldPosition().y + gate->rectangle.top + 2, 5, 7 };
+					if (rect.contains(mouseWorldPosition))
+					{
+						gate->m_type = _ButtonOn_;
+						break;
+					}
+				}
+				if (gate->m_type == _SwitchOff_ || gate->m_type == _SwitchOn_)
+				{
+					sf::FloatRect rect = { gate->GetWorldPosition().x + gate->rectangle.left + 3, gate->GetWorldPosition().y + gate->rectangle.top + 2, 5, 7 };
+					if (rect.contains(mouseWorldPosition))
+					{
+						gate->m_type == _SwitchOff_ ? gate->m_type = _SwitchOn_ : gate->m_type = _SwitchOff_;
+						break;
+					}
+				}
+			}
+
 			// gate
 			if (gate->Clicked(mouseWorldPosition))
 			{
@@ -244,6 +337,19 @@ void Application::HandleInput()
 
 	if (input.getMouseLeftPressed())
 	{
+		for (Gate* gate : gates)
+		{
+			if (gate->m_type == _ButtonOff_)
+			{
+				sf::FloatRect rect = { gate->GetWorldPosition().x + gate->rectangle.left + 3, gate->GetWorldPosition().y + gate->rectangle.top + 2, 5, 7 };
+				if (rect.contains(mouseWorldPosition))
+				{
+					gate->m_type = _ButtonOn_;
+					break;
+				}
+			}
+		}
+
 		if (selectedGate)
 		{
 			if (selectedGate->GetInstantiated())
@@ -300,6 +406,15 @@ void Application::HandleInput()
 
 	if (input.getMouseLeftUp())
 	{
+		// only on released...
+		for (Gate* gate : gates)
+		{
+			if (gate->m_type == _ButtonOn_)
+			{
+				gate->m_type = _ButtonOff_;
+			}
+		}
+
 		if (connection)
 		{
 			//if (!gateA->m_nodes[gateANode].connection && !gateB->m_nodes[gateBNode].connection)
@@ -366,11 +481,23 @@ void Application::HandleInput()
 			{
 				for (int i = 0; i < 3; i++)
 				{
-					//if (selectedGate->m_nodes[i].connection)
-					//{
-					//	selectedGate->m_nodes[i].connection->connection = nullptr;
-					//	selectedGate->m_nodes[i].connection = nullptr;
-					//}
+					Gate::Node* selectedNode = &selectedGate->m_nodes[i];
+					if (selectedNode->connections.size() > 0)
+					{
+						for (int j = 0; j < selectedGate->m_nodes[i].connections.size(); j++)
+						{
+							Gate::Node* connectedNode = selectedGate->m_nodes[i].connections[j];
+
+							for (int k = 0; k < selectedGate->m_nodes[i].connections[j]->connections.size(); k++)
+							{
+								if (selectedNode == connectedNode->connections[k])
+								{
+									connectedNode->connections.erase(connectedNode->connections.begin() + k);
+									break;
+								}
+							}
+						}
+					}
 				}
 				for (int i = 0; i < gates.size(); i++)
 				{
@@ -394,9 +521,11 @@ void Application::HandleInput()
 
 void Application::Update(float deltaTime)
 {
+
+	// Need to loop through backwards recursively? to simulate gates taking small amount of time to process (clock pulses - d flipflop) overkill maybe
 	for (Gate* gate : gates)
 	{
-		gate->Update();
+		gate->Update(deltaTime);
 	}
 
 	if (selectedGate)
@@ -521,9 +650,7 @@ void Application::Render()
 
 				window->draw(line, 2, sf::Lines);
 			}
-
 		}
-		
 	}
 
 	window->display();
