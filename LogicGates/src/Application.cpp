@@ -1,7 +1,5 @@
 #include "Application.h"
 
-#include <iostream>
-
 Application::Application()
 {
 	window = new sf::RenderWindow(sf::VideoMode(width, height), "");
@@ -117,10 +115,13 @@ Application::Application()
 	sprites[_DisplayD_] = &spriteDisplayD;
 	sprites[_DisplayE_] = &spriteDisplayE;
 	sprites[_DisplayF_] = &spriteDisplayF;
+
+	Load();
 }
 
 Application::~Application()
 {
+	Save();
 	delete window;
 }
 
@@ -163,11 +164,18 @@ void Application::Run()
 			case sf::Event::MouseWheelMoved:
 				input.setMouseWheelDelta(event.mouseWheel.delta);
 				break;
+			case sf::Event::LostFocus:
+				/*valid = true;
+				dragging = false;
+				connecting = false;
+				connection = false;
+				selecting = false;*/
+				break;
 			}
 		}
 		HandleInput();
 		Update(clock.restart().asMilliseconds());
-		Render();
+ 		Render();
 	}
 	window->close();
 }
@@ -235,20 +243,20 @@ void Application::HandleInput()
 		}
 	}
 	
-	if (input.getKeyPressed(sf::Keyboard::Num1)) selectedGate = new On(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num2)) selectedGate = new Off(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num3)) selectedGate = new AND(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num4)) selectedGate = new OR(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num5)) selectedGate = new NAND(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num6)) selectedGate = new NOR(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num7)) selectedGate = new XOR(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num8)) selectedGate = new XNOR(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num9)) selectedGate = new NOT(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Num0)) selectedGate = new Clock(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Dash)) selectedGate = new Button(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Equal)) selectedGate = new Switch(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::BackSpace)) selectedGate = new Light(input.getMousePosition() / zoom);
-	if (input.getKeyPressed(sf::Keyboard::Home)) selectedGate = new Display(input.getMousePosition() / zoom);
+	if (input.getKeyPressed(sf::Keyboard::Num1)) selectedGate = new On(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Num2)) selectedGate = new Off(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Num3)) selectedGate = new AND(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Num4)) selectedGate = new OR(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Num5)) selectedGate = new NAND(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Num6)) selectedGate = new NOR(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Num7)) selectedGate = new XOR(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Num8)) selectedGate = new XNOR(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Num9)) selectedGate = new NOT(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Num0)) selectedGate = new Clock(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Dash)) selectedGate = new Button(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Equal)) selectedGate = new Switch(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::BackSpace)) selectedGate = new Light(input.getMousePosition() / zoom, ID);
+	if (input.getKeyPressed(sf::Keyboard::Home)) selectedGate = new Display(input.getMousePosition() / zoom, ID);
 
 
 	if (input.getMouseLeftDown())
@@ -262,6 +270,7 @@ void Application::HandleInput()
 				{
 					selectedGate->SetInstantiated(true);
 					gates.push_back(selectedGate);
+					ID++;
 				}
 			}
 		}
@@ -323,35 +332,6 @@ void Application::HandleInput()
 					}
 				}
 				break;
-
-			//	// top input node
-			//	if (gate->inputNodes[0].Clicked(mouseWorldPosition))
-			//	{
-			//		connecting = true;
-			//		gateA = gate;
-			//		gateANode = 0;
-			//		selectedGate = nullptr;
-			//		wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[0].position);
-			//	}
-			//	// bottom input node
-			//	else if (gate->inputNodes[1].Clicked(mouseWorldPosition))
-			//	{
-			//		connecting = true;
-			//		gateA = gate;
-			//		gateANode = 1;
-			//		selectedGate = nullptr;
-			//		wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[1].position);
-			//	}
-			//	// output node
-			//	else if (gate->outputNodes[0].Clicked(mouseWorldPosition))
-			//	{
-			//		connecting = true;
-			//		gateA = gate;
-			//		gateANode = 2;
-			//		selectedGate = nullptr;
-			//		wireAWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->outputNodes[0].position);
-			//	}
-			//	break;
 			}
 			
 		}
@@ -435,34 +415,6 @@ void Application::HandleInput()
 				{
 					break;
 				}
-
-				//// top input node
-				//if (gate->inputNodes[0].Clicked(mouseWorldPosition))
-				//{
-				//	connection = true;
-				//	gateB = gate;
-				//	gateBNode = 0;
-				//	wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[0].position);
-				//	break;
-				//}
-				//// bottom input node
-				//else if (gate->inputNodes[1].Clicked(mouseWorldPosition))
-				//{
-				//	connection = true;
-				//	gateB = gate;
-				//	gateBNode = 1;
-				//	wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->inputNodes[1].position);
-				//	break;
-				//}
-				//// output node
-				//else if (gate->outputNodes[0].Clicked(mouseWorldPosition))
-				//{
-				//	connection = true;
-				//	gateB = gate;
-				//	gateBNode = 2;
-				//	wireBWorldSave = sf::Vector2f(gate->GetWorldPosition() + gate->outputNodes[0].position);
-				//	break;
-				//}
 			}
 		}
 	}
@@ -555,22 +507,22 @@ void Application::HandleInput()
 							}
 						}
 					}
-					for (int i = 0; i < selectedGate->outputNodes.size(); i++)
+				}
+				for (int i = 0; i < selectedGate->outputNodes.size(); i++)
+				{
+					Gate::Node* selectedNode = &selectedGate->outputNodes[i];
+					if (selectedNode->connections.size() > 0)
 					{
-						Gate::Node* selectedNode = &selectedGate->outputNodes[i];
-						if (selectedNode->connections.size() > 0)
+						for (int j = 0; j < selectedNode->connections.size(); j++)
 						{
-							for (int j = 0; j < selectedGate->outputNodes[i].connections.size(); j++)
-							{
-								Gate::Node* connectedNode = selectedGate->outputNodes[i].connections[j];
+							Gate::Node* connectedNode = selectedNode->connections[j];
 
-								for (int k = 0; k < selectedGate->outputNodes[i].connections[j]->connections.size(); k++)
+							for (int k = 0; k < connectedNode->connections.size(); k++)
+							{
+								if (selectedNode == connectedNode->connections[k])
 								{
-									if (selectedNode == connectedNode->connections[k])
-									{
-										connectedNode->connections.erase(connectedNode->connections.begin() + k);
-										break;
-									}
+									connectedNode->connections.erase(connectedNode->connections.begin() + k);
+									break;
 								}
 							}
 						}
@@ -581,6 +533,7 @@ void Application::HandleInput()
 					if (gates[i] == selectedGate)
 					{
 						gates.erase(gates.begin() + i);
+						UpdateGateIDs();
 						break;
 					}
 				}
@@ -733,6 +686,135 @@ void Application::Render()
 	}
 
 	window->display();
+}
+
+void Application::Save()
+{
+	std::ofstream file;
+	file.open("save.txt", std::ofstream::out | std::ofstream::trunc);
+	
+	for (Gate* gate : gates)
+	{
+		file << gate->m_type << "," << gate->GetWorldPosition().x << "," << gate->GetWorldPosition().y << ",";
+	}
+	file << ":";
+	for (Gate* gate : gates)
+	{
+		if (gate->outputNodes.size() == 0) continue;
+
+		for (const Gate::Node& node : gate->outputNodes)
+		{
+			for (Gate::Node* connection : node.connections)
+			{
+				file << gate->ID << "," << node.ID << "," << connection->parent->ID << "," << connection->ID << ",";
+			}
+		}
+	}
+
+	file.close();
+}
+
+void Application::Load()
+{
+	std::ifstream file;
+	file.open("save.txt");
+	std::string line;
+
+	if (file.is_open())
+	{
+		getline(file, line);
+		file.close();
+	}
+
+	std::cout << line;
+
+	std::stringstream ss(line);
+
+	for (int i; ss >> i;) {
+
+		int x, y;
+		if (ss.peek() == ',')
+			ss.ignore();
+		ss >> x;
+		if (ss.peek() == ',')
+			ss.ignore();
+		ss >> y;
+		if (ss.peek() == ',')
+			ss.ignore();
+		
+
+		if (i == _NOT_) gates.push_back(new NOT(sf::Vector2i(x, y), ID++));
+		else if (i == _AND_) gates.push_back(new AND(sf::Vector2i(x, y), ID++));
+		else if (i == _OR_) gates.push_back(new OR(sf::Vector2i(x, y), ID++));
+		else if (i == _NAND_) gates.push_back(new NAND(sf::Vector2i(x, y), ID++));
+		else if (i == _NOR_) gates.push_back(new NOR(sf::Vector2i(x, y), ID++));
+		else if (i == _XOR_) gates.push_back(new XOR(sf::Vector2i(x, y), ID++));
+		else if (i == _XNOR_) gates.push_back(new XNOR(sf::Vector2i(x, y), ID++));
+		else if (i == _On_) gates.push_back(new On(sf::Vector2i(x, y), ID++));
+		else if (i == _Off_) gates.push_back(new Off(sf::Vector2i(x, y), ID++));
+		else if (i == _ClockOff_) gates.push_back(new Clock(sf::Vector2i(x, y), ID++));
+		else if (i == _ClockOn_) gates.push_back(new Clock(sf::Vector2i(x, y), ID++));
+		else if (i == _ButtonOff_) gates.push_back(new Button(sf::Vector2i(x, y), ID++));
+		else if (i == _ButtonOn_) gates.push_back(new Button(sf::Vector2i(x, y), ID++));
+		else if (i == _SwitchOff_) gates.push_back(new Switch(sf::Vector2i(x, y), ID++));
+		else if (i == _SwitchOn_) gates.push_back(new Switch(sf::Vector2i(x, y), ID++));
+		else if (i == _LightOff_) gates.push_back(new Light(sf::Vector2i(x, y), ID++));
+		else if (i == _LightOn_) gates.push_back(new Light(sf::Vector2i(x, y), ID++));
+		else if (i == _Display0_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _Display1_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _Display2_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _Display3_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _Display4_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _Display5_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _Display6_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _Display7_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _Display8_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _Display9_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _DisplayA_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _DisplayB_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _DisplayC_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _DisplayD_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _DisplayE_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+		else if (i == _DisplayF_) gates.push_back(new Display(sf::Vector2i(x, y), ID++));
+
+		if (ss.peek() == ':')
+		{
+			ss.ignore();
+			break;
+		}
+	}
+	for (int i; ss >> i;)
+	{
+		int gateID = i;
+		int nodeID;
+		int otherGateID;
+		int otherNodeID;
+	
+		if (ss.peek() == ',') ss.ignore();
+		ss >> nodeID;
+		if (ss.peek() == ',') ss.ignore();
+		ss >> otherGateID;
+		if (ss.peek() == ',') ss.ignore();
+		ss >> otherNodeID;
+		if (ss.peek() == ',') ss.ignore();
+	
+		gates[gateID]->ConnectOutputToInput(gates[otherGateID], &gates[otherGateID]->inputNodes[otherNodeID]);
+	}
+
+	for (Gate* gate : gates)
+	{
+		gate->SetInstantiated(true);
+	}
+
+}
+
+void Application::UpdateGateIDs()
+{
+	for (int i = 0; i < gates.size(); i++)
+	{
+		gates[i]->ID = i;
+	}
+	ID = gates.size();
 }
 
 

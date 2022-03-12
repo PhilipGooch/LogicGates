@@ -7,9 +7,10 @@ Gate::Gate(const Gate& gate) :
 {
 }
 
-Gate::Gate(const sf::Vector2i& gridPosition) :
+Gate::Gate(const sf::Vector2i& gridPosition, int id) :
 	m_worldPosition(gridPosition),
-	m_instantiated(false)
+	m_instantiated(false),
+	ID(id)
 {
 	
 }

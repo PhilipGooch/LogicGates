@@ -5,6 +5,10 @@
 
 #include <vector>
 #include <map>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 class Application
 {
@@ -18,6 +22,13 @@ protected:
 	void HandleInput();
 	void Update(float deltaTime);
 	void Render();
+
+private:
+	void Save();
+
+	void Load();
+
+	void UpdateGateIDs();
 
 private:
 	sf::RenderWindow* window;
@@ -123,5 +134,7 @@ private:
 
 	int width = 1024;
 	int height = 1024 - 256;
+
+	int ID = 0;
 };
 

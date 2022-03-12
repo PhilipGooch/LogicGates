@@ -52,6 +52,7 @@ public:
 		sf::Vector2i position;
 		sf::FloatRect rectangle;
 		TYPE type;
+		int ID;
 
 		bool Clicked(sf::Vector2f mouse) 
 		{ 
@@ -63,7 +64,7 @@ public:
 	};
 
 	Gate(const Gate& gate);
-	Gate(const sf::Vector2i& worldPosition);
+	Gate(const sf::Vector2i& worldPosition, int id);
 	~Gate();
 
 	void SetWorldPosition(const sf::Vector2i& worldPosition); 
@@ -90,6 +91,10 @@ public:
 
 	int m_type;
 
+	int ID;
+
+	int nodeID = 0;
+
 private:
 	sf::Vector2i m_worldPosition;
 	bool m_instantiated;
@@ -111,8 +116,8 @@ public:
 	{
 	}
 
-	NOT(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	NOT(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _NOT_;
 
@@ -123,12 +128,14 @@ public:
 
 		node.type = Node::INPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(1, 4);
 		node.rectangle = { 0, 2, 4, 4 };
 		inputNodes.push_back(node);
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(23, 4);
 		node.rectangle = { 21, 2, 5, 5 };
 		outputNodes.push_back(node);
@@ -163,8 +170,8 @@ public:
 	{
 	}
 
-	AND(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	AND(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _AND_;
 
@@ -175,16 +182,19 @@ public:
 
 		node.type = Node::INPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(1, 2);
 		node.rectangle = { 0, 0, 4, 4 };
 		inputNodes.push_back(node);
 
+		node.ID = 1;
 		node.position = sf::Vector2i(1, 6);
 		node.rectangle = { 0, 5, 4, 4 };
 		inputNodes.push_back(node);
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(23, 4);
 		node.rectangle = { 21, 2, 5, 5 };
 		outputNodes.push_back(node);
@@ -220,8 +230,8 @@ public:
 	{
 	}
 
-	OR(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	OR(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _OR_;
 
@@ -232,16 +242,19 @@ public:
 
 		node.type = Node::INPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(1, 2);
 		node.rectangle = { 0, 0, 4, 4 };
 		inputNodes.push_back(node);
 
+		node.ID = 1;
 		node.position = sf::Vector2i(1, 6);
 		node.rectangle = { 0, 5, 4, 4 };
 		inputNodes.push_back(node);
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(23, 4);
 		node.rectangle = { 21, 2, 5, 5 };
 		outputNodes.push_back(node);
@@ -275,8 +288,8 @@ public:
 	{
 	}
 
-	NAND(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	NAND(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _NAND_;
 
@@ -287,16 +300,19 @@ public:
 
 		node.type = Node::INPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(1, 2);
 		node.rectangle = { 0, 0, 4, 4 };
 		inputNodes.push_back(node);
 
+		node.ID = 1;
 		node.position = sf::Vector2i(1, 6);
 		node.rectangle = { 0, 5, 4, 4 };
 		inputNodes.push_back(node);
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(23, 4);
 		node.rectangle = { 21, 2, 5, 5 };
 		outputNodes.push_back(node);
@@ -330,8 +346,8 @@ public:
 		Gate(gate)
 	{
 	}
-	NOR(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	NOR(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _NOR_;
 
@@ -342,16 +358,19 @@ public:
 
 		node.type = Node::INPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(1, 2);
 		node.rectangle = { 0, 0, 4, 4 };
 		inputNodes.push_back(node);
 
+		node.ID = 1;
 		node.position = sf::Vector2i(1, 6);
 		node.rectangle = { 0, 5, 4, 4 };
 		inputNodes.push_back(node);
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(23, 4);
 		node.rectangle = { 21, 2, 5, 5 };
 		outputNodes.push_back(node);
@@ -386,8 +405,8 @@ public:
 	{
 	}
 
-	XOR(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	XOR(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _XOR_;
 
@@ -398,16 +417,19 @@ public:
 
 		node.type = Node::INPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(1, 2);
 		node.rectangle = { 0, 0, 4, 4 };
 		inputNodes.push_back(node);
 
+		node.ID = 1;
 		node.position = sf::Vector2i(1, 6);
 		node.rectangle = { 0, 5, 4, 4 };
 		inputNodes.push_back(node);
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(23, 4);
 		node.rectangle = { 21, 2, 5, 5 };
 		outputNodes.push_back(node);
@@ -431,17 +453,6 @@ public:
 		bool a = inputNodes[0].connections[0]->parent->output;
 		bool b = inputNodes[1].connections[0]->parent->output;
 		output = (a && !b) || (b && !a);
-
-		/*if (m_nodes[0].connections.empty() || m_nodes[1].connections.empty())
-		{
-			output = false;
-		}
-		else
-		{
-			bool a = m_nodes[0].connections[0]->parent->output;
-			bool b = m_nodes[1].connections[0]->parent->output;
-			output = (a && !b) || (b && !a);
-		}*/
 	}
 };
 
@@ -453,8 +464,8 @@ public:
 	{
 	}
 
-	XNOR(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	XNOR(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _XNOR_;
 
@@ -465,16 +476,19 @@ public:
 
 		node.type = Node::INPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(1, 2);
 		node.rectangle = { 0, 0, 4, 4 };
 		inputNodes.push_back(node);
 
+		node.ID = 1;
 		node.position = sf::Vector2i(1, 6);
 		node.rectangle = { 0, 5, 4, 4 };
 		inputNodes.push_back(node);
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(23, 4);
 		node.rectangle = { 21, 2, 5, 5 };
 		outputNodes.push_back(node);
@@ -510,8 +524,8 @@ public:
 
 	}
 
-	On(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	On(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _On_;
 
@@ -522,6 +536,7 @@ public:
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(17, 5);
 		node.rectangle = { 17, 3, 5, 5 };
 		outputNodes.push_back(node);
@@ -546,8 +561,8 @@ public:
 
 	}
 
-	Off(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	Off(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _Off_;
 
@@ -558,6 +573,7 @@ public:
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(17, 5);
 		node.rectangle = { 17, 3, 5, 5 };
 		outputNodes.push_back(node);
@@ -582,8 +598,8 @@ public:
 
 	}
 
-	Clock(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	Clock(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _ClockOff_;
 
@@ -594,6 +610,7 @@ public:
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(17, 5);
 		node.rectangle = { 17, 3, 5, 5 };
 		outputNodes.push_back(node);
@@ -606,7 +623,37 @@ public:
 	void Update(float deltaTime) override
 	{
 		timer += deltaTime;
-		if (timer > pulseTime)
+		
+		if (pulsing)
+		{
+			if (timer > onTime)
+			{
+				output = !output;
+				timer -= onTime;
+				pulsing = !pulsing;
+			}
+		}
+		else
+		{
+			if (timer > offTime)
+			{
+				output = !output;
+				timer -= offTime;
+				pulsing = !pulsing;
+			}
+		}
+
+		if (output == true)
+		{
+			m_type = _ClockOn_;
+		}
+		else
+		{
+			m_type = _ClockOff_;
+		}
+
+
+		/*if (timer > pulseTime)
 		{
 			output = !output;
 			timer -= pulseTime;
@@ -619,13 +666,17 @@ public:
 			{
 				m_type = _ClockOff_;
 			}
-		}
+		}*/
 
 	}
 
 private:
 	float timer = 0.0f;
 	float pulseTime = 500.0f;
+	bool pulse = false;
+	bool pulsing = false;
+	float onTime = 50.0f;
+	float offTime = 450.0f;
 };
 
 class Button : public Gate
@@ -637,8 +688,8 @@ public:
 
 	}
 
-	Button(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	Button(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _ButtonOff_;
 
@@ -649,6 +700,7 @@ public:
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(17, 5);
 		node.rectangle = { 17, 3, 5, 5 };
 		outputNodes.push_back(node);
@@ -680,8 +732,8 @@ public:
 
 	}
 
-	Switch(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	Switch(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _SwitchOff_;
 
@@ -692,6 +744,7 @@ public:
 
 		node.type = Node::OUTPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(17, 5);
 		node.rectangle = { 17, 3, 5, 5 };
 		outputNodes.push_back(node);
@@ -724,8 +777,8 @@ public:
 
 	}
 
-	Light(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	Light(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _LightOff_;
 
@@ -736,6 +789,7 @@ public:
 
 		node.type = Node::INPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(3, 9);
 		node.rectangle = { 1, 7, 4, 4 };
 		inputNodes.push_back(node);
@@ -779,8 +833,8 @@ public:
 
 	}
 
-	Display(const sf::Vector2i& gridPosition) :
-		Gate(gridPosition)
+	Display(const sf::Vector2i& gridPosition, int id) :
+		Gate(gridPosition, id)
 	{
 		m_type = _Display0_;
 
@@ -791,18 +845,22 @@ public:
 
 		node.type = Node::INPUT;
 
+		node.ID = 0;
 		node.position = sf::Vector2i(1, 1);
 		node.rectangle = { 0, 0, 4, 4 };
 		inputNodes.push_back(node);
 
+		node.ID = 1;
 		node.position = sf::Vector2i(1, 5);
 		node.rectangle = { 0, 4, 4, 4 };
 		inputNodes.push_back(node);
 
+		node.ID = 2;
 		node.position = sf::Vector2i(1, 9);
 		node.rectangle = { 0, 8, 4, 4 };
 		inputNodes.push_back(node);
 
+		node.ID = 3;
 		node.position = sf::Vector2i(1, 13);
 		node.rectangle = { 0, 12, 4, 3 };
 		inputNodes.push_back(node);
